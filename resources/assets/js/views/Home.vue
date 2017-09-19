@@ -1,12 +1,18 @@
 <template>
     <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Home page</div>
+        <div class="columns">
+            <div class="column">
+                <div class="message" v-for="status in statuses">
+                    <div class="message-header">
+                        <p>
+                            {{ status.user.name }} said...
+                        </p>
+                        <p>
+                            {{ status.created_at | ago }}
+                        </p>
+                    </div>
 
-                    <div class="panel-body">
-                        I'm an example component!
+                    <div class="message-body" v-text="status.body">
                     </div>
                 </div>
             </div>
@@ -15,9 +21,30 @@
 </template>
 
 <script>
+
+    import moment from 'moment';
+    import Status from '../models/Status'
+
     export default {
-        mounted() {
-            console.log('Component mounted.')
+
+        data() {
+            return {
+                statuses: []
+            }
+        },
+
+        filters: {
+            ago(data) {
+                return moment(data).fromNow();
+            }
+        },
+
+        created() {
+            Status.all(statuses => this.statuses = statuses)
+        },
+
+        methods: {
+
         }
     }
 </script>
